@@ -22,6 +22,8 @@ SDL_Window* displayWindow;
 
 GLuint LoadTexture(const char *filePath);
 
+void DrawText(ShaderProgram &program, int fontTexture, std::string text, float size, float spacing);
+
 class SheetSprite {
 public:
 	SheetSprite()
@@ -92,7 +94,7 @@ public:
 	}
 };
 
-#define MAX_BULLETS 100
+#define MAX_BULLETS 30
 //Entity bullets[MAX_BULLETS];
 int bulletIndex = 0;
 void shootBullet();
@@ -198,7 +200,17 @@ void Setup()
 
 void ProcessMainMenuInput()
 {
-
+	while (SDL_PollEvent(&event)) {
+		if (event.type == SDL_QUIT || event.type == SDL_WINDOWEVENT_CLOSE) {
+			done = true;
+		}
+		else if (event.type == SDL_KEYUP) {
+			if (event.key.keysym.scancode == SDL_SCANCODE_E)
+			{
+				mode = STATE_GAME_LEVEL;
+			}
+		}
+	}
 }
 
 void ProcessGameLevelInput(GameState state)
@@ -282,11 +294,16 @@ void Update(float elapsed)
 
 void RenderMainMenu()
 {
+	glClearColor(0.5f, 0.0f, 0.5f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT);
+	//"PRESS E TO START"
+
 
 }
 
 void RenderGameLevel(GameState state)
 {
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
 
 	program.SetModelMatrix(modelMatrix);
@@ -382,6 +399,43 @@ void SheetSprite::Draw(ShaderProgram &program) {
 	glDisableVertexAttribArray(program.texCoordAttribute);
 	glDisableVertexAttribArray(program.positionAttribute);
 
+}
+
+void DrawText(ShaderProgram &program, int fontTexture, std::string text, float size, float spacing)
+{
+	float character_size = 1.0 / 16.0f;
+
+	std::vector<float> vertexData;		//And now it's saying vector isn't a member of std
+	std::vector<float> texCoordData;	//Ya I think I'm done
+
+	for (int i = 0; i < text.size(); i++) {
+
+		int spriteIndex = (int)text[i];
+
+		float texture_x = (float)(spriteIndex % 16) / 16.0f;
+		float texture_y = (float)(spriteIndex / 16) / 16.0f;
+
+		vertexData.insert(vertexData.end(), {
+			((size + spacing) * i) + (-0.5f * size), 0.5f * size,
+			((size + spacing) * i) + (-0.5f * size), -0.5f * size,
+			((size + spacing) * i) + (0.5f * size), 0.5f * size,
+			((size + spacing) * i) + (0.5f * size), -0.5f * size,
+			((size + spacing) * i) + (0.5f * size), 0.5f * size,
+			((size + spacing) * i) + (-0.5f * size), -0.5f * size,
+			});
+		texCoordData.insert(texCoordData.end(), {
+			texture_x, texture_y,
+			texture_x, texture_y + character_size,
+			texture_x + character_size, texture_y,
+			texture_x + character_size, texture_y + character_size,
+			texture_x + character_size, texture_y,
+			texture_x, texture_y + character_size,
+			});
+
+		glBindTexture(GL_TEXTURE_2D, fontTexture);
+
+
+	}
 }
 
 

@@ -1,2 +1,12 @@
 ﻿  main.cpp
-  NYUCodebase.vcxproj -> C:\Users\DeMan\CS3113HW\HW3\Debug\NYUCodebase.exe
+c:\users\deman\cs3113hw\hw3\nyucodebase\main.cpp(408): error C2039: 'vector': is not a member of 'std'
+  c:\program files (x86)\microsoft visual studio\2017\community\vc\tools\msvc\14.16.27023\include\sstream(14): note: see declaration of 'std'
+c:\users\deman\cs3113hw\hw3\nyucodebase\main.cpp(408): error C2065: 'vector': undeclared identifier
+c:\users\deman\cs3113hw\hw3\nyucodebase\main.cpp(408): error C2062: type 'float' unexpected
+c:\users\deman\cs3113hw\hw3\nyucodebase\main.cpp(409): error C2039: 'vector': is not a member of 'std'
+  c:\program files (x86)\microsoft visual studio\2017\community\vc\tools\msvc\14.16.27023\include\sstream(14): note: see declaration of 'std'
+c:\users\deman\cs3113hw\hw3\nyucodebase\main.cpp(409): error C2065: 'vector': undeclared identifier
+c:\users\deman\cs3113hw\hw3\nyucodebase\main.cpp(409): error C2062: type 'float' unexpected
+c:\users\deman\cs3113hw\hw3\nyucodebase\main.cpp(411): warning C4018: '<': signed/unsigned mismatch
+c:\users\deman\cs3113hw\hw3\nyucodebase\main.cpp(418): error C2065: 'vertexData': undeclared identifier
+c:\users\deman\cs3113hw\hw3\nyucodebase\main.cpp(426): error C2065: 'texCoordData': undeclared identifier
