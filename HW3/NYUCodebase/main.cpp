@@ -10,6 +10,7 @@
 #include "glm/gtc/matrix_transform.hpp"
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
+#include <vector>
 
 #ifdef _WINDOWS
 #define RESOURCE_FOLDER ""
@@ -113,6 +114,9 @@ float ticks;
 //Entity Player(0.0f, -0.8f, 0.3f, 0.3f);
 int sploded = 0;
 
+GLuint fontSheet = LoadTexture(RESOURCE_FOLDER"font1.png");
+glm::mat4 textMatrix = glm::mat4(1.0f);
+
 struct GameState{
 
 	Entity player;
@@ -130,7 +134,8 @@ GameState state;
 //And it all broke
 void Setup()
 {
-	mode = STATE_GAME_LEVEL;
+	mode = STATE_MAIN_MENU;
+	textMatrix = glm::translate(textMatrix, glm::vec3(-0.2f, 0.0f, 0.0f));
 	SDL_Init(SDL_INIT_VIDEO);
 	displayWindow = SDL_CreateWindow("My Game", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1280, 720, SDL_WINDOW_OPENGL);
 	SDL_GLContext context = SDL_GL_CreateContext(displayWindow);
@@ -182,9 +187,6 @@ void Setup()
 		state.Enemies[i].sprite = enemySprite;
 		state.Enemies[i].velocity.y = -0.07f;
 	}
-
-
-
 
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -297,8 +299,8 @@ void RenderMainMenu()
 	glClearColor(0.5f, 0.0f, 0.5f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
 	//"PRESS E TO START"
-
-
+	std::string message = "PRESS E TO START";
+	DrawText(program, fontSheet, message, 1.0f, 0.1f);
 }
 
 void RenderGameLevel(GameState state)
@@ -405,8 +407,8 @@ void DrawText(ShaderProgram &program, int fontTexture, std::string text, float s
 {
 	float character_size = 1.0 / 16.0f;
 
-	std::vector<float> vertexData;		//And now it's saying vector isn't a member of std
-	std::vector<float> texCoordData;	//Ya I think I'm done
+	std::vector<float> vertexData;
+	std::vector<float> texCoordData;
 
 	for (int i = 0; i < text.size(); i++) {
 
