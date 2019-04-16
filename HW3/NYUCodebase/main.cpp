@@ -298,9 +298,10 @@ void RenderMainMenu()
 {
 	glClearColor(0.5f, 0.0f, 0.5f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
+	program.SetModelMatrix(textMatrix);
 	//"PRESS E TO START"
 	std::string message = "PRESS E TO START";
-	DrawText(program, fontSheet, message, 1.0f, 0.1f);
+	DrawText(program, fontSheet, message, 1.0f, 0.2f);
 }
 
 void RenderGameLevel(GameState state)
