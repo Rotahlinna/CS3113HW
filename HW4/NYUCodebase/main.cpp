@@ -352,6 +352,7 @@ void Render()
 
 	glm::mat4 modelMatrix4 = glm::mat4(1.0f);
 	program.SetModelMatrix(modelMatrix4);
+	glBindTexture(GL_TEXTURE_2D, spriteSheet); //I really have no idea why NONE of this works
 	glVertexAttribPointer(program.positionAttribute, 2, GL_FLOAT, false, 0, vertexDataArray);
 	glEnableVertexAttribArray(program.positionAttribute);
 	glVertexAttribPointer(program.texCoordAttribute, 2, GL_FLOAT, false, 0, texCoordDataArray);

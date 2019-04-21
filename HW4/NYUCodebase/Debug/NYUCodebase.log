@@ -10,7 +10,7 @@ c:\users\deman\cs3113hw\hw4\nyucodebase\main.cpp(259): warning C4244: 'argument'
 c:\users\deman\cs3113hw\hw4\nyucodebase\main.cpp(259): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
 c:\users\deman\cs3113hw\hw4\nyucodebase\main.cpp(296): warning C4018: '<': signed/unsigned mismatch
 c:\users\deman\cs3113hw\hw4\nyucodebase\main.cpp(320): warning C4018: '<': signed/unsigned mismatch
-c:\users\deman\cs3113hw\hw4\nyucodebase\main.cpp(439): warning C4018: '<': signed/unsigned mismatch
-c:\users\deman\cs3113hw\hw4\nyucodebase\main.cpp(492): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+c:\users\deman\cs3113hw\hw4\nyucodebase\main.cpp(440): warning C4018: '<': signed/unsigned mismatch
 c:\users\deman\cs3113hw\hw4\nyucodebase\main.cpp(493): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+c:\users\deman\cs3113hw\hw4\nyucodebase\main.cpp(494): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
   NYUCodebase.vcxproj -> C:\Users\DeMan\CS3113HW\HW4\Debug\NYUCodebase.exe
