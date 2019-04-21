@@ -6,11 +6,11 @@ c:\users\deman\cs3113hw\hw4\nyucodebase\main.cpp(150): warning C4244: '-=': conv
           [
               T=float
           ]
-c:\users\deman\cs3113hw\hw4\nyucodebase\main.cpp(242): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-c:\users\deman\cs3113hw\hw4\nyucodebase\main.cpp(242): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-c:\users\deman\cs3113hw\hw4\nyucodebase\main.cpp(268): warning C4018: '<': signed/unsigned mismatch
-c:\users\deman\cs3113hw\hw4\nyucodebase\main.cpp(285): warning C4018: '<': signed/unsigned mismatch
-c:\users\deman\cs3113hw\hw4\nyucodebase\main.cpp(370): warning C4018: '<': signed/unsigned mismatch
-c:\users\deman\cs3113hw\hw4\nyucodebase\main.cpp(519): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
-c:\users\deman\cs3113hw\hw4\nyucodebase\main.cpp(520): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+c:\users\deman\cs3113hw\hw4\nyucodebase\main.cpp(259): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+c:\users\deman\cs3113hw\hw4\nyucodebase\main.cpp(259): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+c:\users\deman\cs3113hw\hw4\nyucodebase\main.cpp(296): warning C4018: '<': signed/unsigned mismatch
+c:\users\deman\cs3113hw\hw4\nyucodebase\main.cpp(320): warning C4018: '<': signed/unsigned mismatch
+c:\users\deman\cs3113hw\hw4\nyucodebase\main.cpp(439): warning C4018: '<': signed/unsigned mismatch
+c:\users\deman\cs3113hw\hw4\nyucodebase\main.cpp(492): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+c:\users\deman\cs3113hw\hw4\nyucodebase\main.cpp(493): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
   NYUCodebase.vcxproj -> C:\Users\DeMan\CS3113HW\HW4\Debug\NYUCodebase.exe

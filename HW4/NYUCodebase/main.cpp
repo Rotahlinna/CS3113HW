@@ -75,8 +75,8 @@ public:
 	Entity() {
 		position.x = 0;
 		position.y = 0;
-		size.x = 0;
-		size.y = 0;
+		size.x = 1.0f;
+		size.y = 1.0f;
 	}
 
 	glm::vec3 position;
@@ -161,24 +161,36 @@ bool done = false;
 SDL_Event event;
 #define FIXED_TIMESTEP 0.0166666f
 #define MAX_TIMESTEPS 6
+float lastFrameTicks;
 float elapsed;
+float ticks;
 
+void DrawSpriteSheetSprite(ShaderProgram &program, int index, int spriteCountX, int spriteCountY, unsigned int textureID);
+
+#define TILE_SIZE 16.0f
+#define LEVEL_HEIGHT 32
+#define LEVEL_WIDTH 128
+#define SPRITE_COUNT_X 16
+#define SPRITE_COUNT_Y 8
 int mapWidth;
 int mapHeight;
 unsigned char** levelData;
-
-#define TILE_SIZE 16
 bool readEntityData(ifstream &stream);
 bool readLayerData(ifstream &stream);
 bool readHeader(ifstream &stream);
 
 
 GLuint spriteSheet = LoadTexture(RESOURCE_FOLDER"arne_sprites.png");//Oh God the legs are a separate sprite...and feet?  256 x 128
-
 Entity player = Entity(0, 0, 0.2f, 0.2f);
 vector<Entity> Enemies;
 SheetSprite enemySprite = SheetSprite(spriteSheet, 16 / 256, 96 / 128, 16 / 256, 16 / 128, 0.2f);
 vector<Entity> Tiles;
+Entity aTile;
+
+vector<float> vertexData;
+vector<float> texCoordData;
+float* vertexDataArray;
+float* texCoordDataArray;
 
 void Setup()
 {
@@ -204,15 +216,20 @@ void Setup()
 
 	glUseProgram(program.programID);
 
+	lastFrameTicks = 0.0f;
+
 	program.SetProjectionMatrix(projectionMatrix);
 	program.SetViewMatrix(viewMatrix);
 
 	SheetSprite playerSprite = SheetSprite(spriteSheet, 48 / 256, 112 / 128, 16 / 256, 16 / 128, 0.2f);
 	player.sprite = playerSprite;
 
-	
 
-	SheetSprite tileSprite = SheetSprite(spriteSheet, 16 / 256, 16 / 128, 16 / 256, 16 / 128, 0.2f);
+
+	SheetSprite tileSprite = SheetSprite(spriteSheet, 16 / 256, 16 / 128, 32 / 256, 32 / 128, 0.2f);
+	aTile.sprite = tileSprite;
+	aTile.position.x = 0;
+	aTile.position.y = 0;
 
 	//Read through Flare map data
 	ifstream infile("mymap.txt");
@@ -239,11 +256,46 @@ void Setup()
 		{
 			if (levelData[y][x] != 0)
 			{
-				Tiles.push_back(Entity(x/(mapWidth*1.777), y/mapHeight, 0.2f, 0.2f));
-				Tiles[curr_Tile].sprite = tileSprite;
+				Tiles.push_back(Entity(x / (mapWidth*1.777), y / mapHeight, 0.2f, 0.2f));
+				//Tiles[curr_Tile].sprite = tileSprite;
 				curr_Tile++;
 			}
 		}
+	}
+
+
+	for (int y = 0; y < LEVEL_HEIGHT; y++) {
+		for (int x = 0; x < LEVEL_WIDTH; x++) {
+			if (levelData[y][x] != 0) {
+				float u = (float)(((int)levelData[y][x]) % SPRITE_COUNT_X) / (float)SPRITE_COUNT_X;
+				float v = (float)(((int)levelData[y][x]) / SPRITE_COUNT_X) / (float)SPRITE_COUNT_Y;
+				float spriteWidth = 1.0f / (float)SPRITE_COUNT_X;
+				float spriteHeight = 1.0f / (float)SPRITE_COUNT_Y;
+				vertexData.insert(vertexData.end(), {
+				TILE_SIZE * x, -TILE_SIZE * y,
+				TILE_SIZE * x, (-TILE_SIZE * y) - TILE_SIZE,
+				(TILE_SIZE * x) + TILE_SIZE, (-TILE_SIZE * y) - TILE_SIZE,
+				TILE_SIZE * x, -TILE_SIZE * y,
+				(TILE_SIZE * x) + TILE_SIZE, (-TILE_SIZE * y) - TILE_SIZE,
+				(TILE_SIZE * x) + TILE_SIZE, -TILE_SIZE * y
+					});
+				texCoordData.insert(texCoordData.end(), {
+				u, v,
+				u, v + (spriteHeight),
+				u + spriteWidth, v + (spriteHeight),
+				u, v,
+				u + spriteWidth, v + (spriteHeight),
+				u + spriteWidth, v
+					});
+			}
+		}
+	}
+
+	vertexDataArray = new float[vertexData.size()];
+	texCoordDataArray = new float[texCoordData.size()];
+	for (int i = 0; i < vertexData.size(); i++) {
+		vertexDataArray[i] = vertexData[i];
+		texCoordDataArray[i] = texCoordData[i];
 	}
 }
 
@@ -269,33 +321,48 @@ void Update(float elapsed)
 		Enemies[i].Update(elapsed);
 	}
 
+	aTile.velocity.x = 0;
+	aTile.velocity.y = 0;
+
 }
+
+
 
 
 void Render()
 {
-	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT);
+	  glClear(GL_COLOR_BUFFER_BIT);
 
+	modelMatrix = glm::translate(modelMatrix, glm::vec3(player.position.x, player.position.y, 0.0f));
 	program.SetModelMatrix(modelMatrix);
 
 	player.Draw(program);
 
 
-	for (int i = 0; i < Enemies.size(); i++) {
+	/*for (int i = 0; i < Enemies.size(); i++) {
 		glm::mat4 modelMatrix3 = glm::mat4(1.0f);
 		modelMatrix3 = glm::translate(modelMatrix3, glm::vec3(Enemies[i].position.x, Enemies[i].position.y, 0.0f));
 		program.SetModelMatrix(modelMatrix3);
 		Enemies[i].Draw(program);
-	}
+	}*/
 
-	
-	for (Entity &thisTile : Tiles)
-	{
-		modelMatrix = glm::translate(modelMatrix, glm::vec3(thisTile.position.x, thisTile.position.y, 0));
-		program.SetModelMatrix(modelMatrix);
-		thisTile.Draw(program);
-	}
+	glm::mat4 modelMatrixqq = glm::mat4(1.0f);
+	program.SetModelMatrix(modelMatrixqq);
+	aTile.Draw(program);
+
+	glm::mat4 modelMatrix4 = glm::mat4(1.0f);
+	program.SetModelMatrix(modelMatrix4);
+	glVertexAttribPointer(program.positionAttribute, 2, GL_FLOAT, false, 0, vertexDataArray);
+	glEnableVertexAttribArray(program.positionAttribute);
+	glVertexAttribPointer(program.texCoordAttribute, 2, GL_FLOAT, false, 0, texCoordDataArray);
+	glEnableVertexAttribArray(program.texCoordAttribute);
+
+	glDrawArrays(GL_TRIANGLES, 0, 6);
+
+	glDisableVertexAttribArray(program.texCoordAttribute);
+	glDisableVertexAttribArray(program.positionAttribute);
+
+
 }
 
 
@@ -306,6 +373,8 @@ int main(int argc, char *argv[])
 	float accumulator = 0.0f;
     while (!done) {
 		ProcessEvents(); //slides don't show where to put the process phase with fixed timestep but I assume it needs to be before Update
+		ticks = (float)SDL_GetTicks() / 1000.0f;
+		elapsed = ticks - lastFrameTicks;
 		elapsed += accumulator;
 		if (elapsed < FIXED_TIMESTEP) {
 			accumulator = elapsed;
@@ -413,6 +482,35 @@ GLuint LoadTexture(const char *filePath) {
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	stbi_image_free(image);
 	return retTexture;
+}
+
+void DrawSpriteSheetSprite(ShaderProgram &program, int index, int spriteCountX, int spriteCountY, unsigned int textureID) 
+{
+	glBindTexture(GL_TEXTURE_2D, textureID);
+	float u = (float)(((int)index) % spriteCountX) / (float)spriteCountX;
+	float v = (float)(((int)index) / spriteCountX) / (float)spriteCountY;
+	float spriteWidth = 1.0 / (float)spriteCountX;
+	float spriteHeight = 1.0 / (float)spriteCountY;
+	float texCoords[] = {
+	u, v + spriteHeight,
+	u + spriteWidth, v,
+	u, v,
+	u + spriteWidth, v,
+	u, v + spriteHeight,
+	u + spriteWidth, v + spriteHeight
+	};
+	float vertices[] = { -0.5f, -0.5f, 0.5f, 0.5f, -0.5f, 0.5f, 0.5f, 0.5f, -0.5f,
+	-0.5f, 0.5f, -0.5f };
+	
+	glVertexAttribPointer(program.positionAttribute, 2, GL_FLOAT, false, 0, vertices);
+	glEnableVertexAttribArray(program.positionAttribute);
+	glVertexAttribPointer(program.texCoordAttribute, 2, GL_FLOAT, false, 0, texCoords);
+	glEnableVertexAttribArray(program.texCoordAttribute);
+
+	glDrawArrays(GL_TRIANGLES, 0, 6);
+
+	glDisableVertexAttribArray(program.texCoordAttribute);
+	glDisableVertexAttribArray(program.positionAttribute);
 }
 
 bool readHeader(ifstream &stream) {
