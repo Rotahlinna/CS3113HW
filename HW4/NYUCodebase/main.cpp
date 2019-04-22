@@ -201,7 +201,7 @@ void Setup()
 	glViewport(0, 0, 1280, 720);
 	program.Load(RESOURCE_FOLDER"vertex_textured.glsl", RESOURCE_FOLDER"fragment_textured.glsl");
 
-	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+	glClearColor(0.0f, 1.0f, 0.0f, 1.0f);
 
 	glm::mat4 projectionMatrix = glm::mat4(1.0f);
 	projectionMatrix = glm::ortho(-1.777f, 1.777f, -1.0f, 1.0f, -1.0f, 1.0f);
@@ -216,12 +216,12 @@ void Setup()
 	program.SetProjectionMatrix(projectionMatrix);
 	program.SetViewMatrix(viewMatrix);
 
-	SheetSprite playerSprite = SheetSprite(spriteSheet, 48 / 256, 112 / 128, 16 / 256, 16 / 128, 0.2f);
+	SheetSprite playerSprite = SheetSprite(spriteSheet, 48.0f / 256.0f, 112.0f / 128.0f, 16.0f / 256.0f, 16.0f / 128.0f, 0.2f);
 	player.sprite = playerSprite;
 
 
 
-	SheetSprite tileSprite = SheetSprite(spriteSheet, 16 / 256, 16 / 128, 32 / 256, 32 / 128, 0.2f);
+	SheetSprite tileSprite = SheetSprite(spriteSheet, 16.0f / 256.0f, 16.0f / 128.0f, 32.0f / 256.0f, 32.0f / 128.0f, 0.2f);
 	aTile.sprite = tileSprite;
 	aTile.position.x = 0;
 	aTile.position.y = 0;
@@ -293,23 +293,24 @@ void Render()
 {
 	 glClear(GL_COLOR_BUFFER_BIT);
 
-	modelMatrix = glm::translate(modelMatrix, glm::vec3(player.position.x, player.position.y, 0.0f));
+	//modelMatrix = glm::translate(modelMatrix, glm::vec3(player.position.x, player.position.y, 0.0f));
 	program.SetModelMatrix(modelMatrix);
 
 	player.Draw(program);
 
-
-	/*for (int i = 0; i < Enemies.size(); i++) {
+/*
+	for (int i = 0; i < Enemies.size(); i++) {
 		glm::mat4 modelMatrix3 = glm::mat4(1.0f);
 		modelMatrix3 = glm::translate(modelMatrix3, glm::vec3(Enemies[i].position.x, Enemies[i].position.y, 0.0f));
 		program.SetModelMatrix(modelMatrix3);
 		Enemies[i].Draw(program);
-	}*/
+	}
 
 	glm::mat4 modelMatrixqq = glm::mat4(1.0f);
 	program.SetModelMatrix(modelMatrixqq);
 	aTile.Draw(program);
 
+	glClearColor(0.5f, 0.25f, 0.25f, 1.0f);
 
 	vector<float> vertexData;
 	vector<float> texCoordData;
@@ -353,7 +354,7 @@ void Render()
 	glDisableVertexAttribArray(program.texCoordAttribute);
 	glDisableVertexAttribArray(program.positionAttribute);
 
-
+	*/
 }
 
 
@@ -366,6 +367,7 @@ int main(int argc, char *argv[])
 		ProcessEvents(); //slides don't show where to put the process phase with fixed timestep but I assume it needs to be before Update
 		ticks = (float)SDL_GetTicks() / 1000.0f;
 		elapsed = ticks - lastFrameTicks;
+		lastFrameTicks = ticks;
 		elapsed += accumulator;
 		if (elapsed < FIXED_TIMESTEP) {
 			accumulator = elapsed;
