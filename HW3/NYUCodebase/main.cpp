@@ -437,6 +437,16 @@ void DrawText(ShaderProgram &program, int fontTexture, std::string text, float s
 
 		glBindTexture(GL_TEXTURE_2D, fontTexture);
 
+		glVertexAttribPointer(program.positionAttribute, 2, GL_FLOAT, false, 0, vertexData.data());
+		glEnableVertexAttribArray(program.positionAttribute);
+
+		glVertexAttribPointer(program.texCoordAttribute, 2, GL_FLOAT, false, 0, texCoordData.data());
+		glEnableVertexAttribArray(program.texCoordAttribute);
+
+		glDrawArrays(GL_TRIANGLES, 0, (int)(text.size() * 6));
+		glDisableVertexAttribArray(program.positionAttribute);
+		glDisableVertexAttribArray(program.texCoordAttribute);
+
 
 	}
 }

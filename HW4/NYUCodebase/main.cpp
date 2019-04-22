@@ -187,11 +187,6 @@ SheetSprite enemySprite = SheetSprite(spriteSheet, 16 / 256, 96 / 128, 16 / 256,
 vector<Entity> Tiles;
 Entity aTile;
 
-vector<float> vertexData;
-vector<float> texCoordData;
-float* vertexDataArray;
-float* texCoordDataArray;
-
 void Setup()
 {
 	SDL_Init(SDL_INIT_VIDEO);
@@ -262,41 +257,6 @@ void Setup()
 			}
 		}
 	}
-
-
-	for (int y = 0; y < LEVEL_HEIGHT; y++) {
-		for (int x = 0; x < LEVEL_WIDTH; x++) {
-			if (levelData[y][x] != 0) {
-				float u = (float)(((int)levelData[y][x]) % SPRITE_COUNT_X) / (float)SPRITE_COUNT_X;
-				float v = (float)(((int)levelData[y][x]) / SPRITE_COUNT_X) / (float)SPRITE_COUNT_Y;
-				float spriteWidth = 1.0f / (float)SPRITE_COUNT_X;
-				float spriteHeight = 1.0f / (float)SPRITE_COUNT_Y;
-				vertexData.insert(vertexData.end(), {
-				TILE_SIZE * x, -TILE_SIZE * y,
-				TILE_SIZE * x, (-TILE_SIZE * y) - TILE_SIZE,
-				(TILE_SIZE * x) + TILE_SIZE, (-TILE_SIZE * y) - TILE_SIZE,
-				TILE_SIZE * x, -TILE_SIZE * y,
-				(TILE_SIZE * x) + TILE_SIZE, (-TILE_SIZE * y) - TILE_SIZE,
-				(TILE_SIZE * x) + TILE_SIZE, -TILE_SIZE * y
-					});
-				texCoordData.insert(texCoordData.end(), {
-				u, v,
-				u, v + (spriteHeight),
-				u + spriteWidth, v + (spriteHeight),
-				u, v,
-				u + spriteWidth, v + (spriteHeight),
-				u + spriteWidth, v
-					});
-			}
-		}
-	}
-
-	vertexDataArray = new float[vertexData.size()];
-	texCoordDataArray = new float[texCoordData.size()];
-	for (int i = 0; i < vertexData.size(); i++) {
-		vertexDataArray[i] = vertexData[i];
-		texCoordDataArray[i] = texCoordData[i];
-	}
 }
 
 
@@ -331,7 +291,7 @@ void Update(float elapsed)
 
 void Render()
 {
-	  glClear(GL_COLOR_BUFFER_BIT);
+	 glClear(GL_COLOR_BUFFER_BIT);
 
 	modelMatrix = glm::translate(modelMatrix, glm::vec3(player.position.x, player.position.y, 0.0f));
 	program.SetModelMatrix(modelMatrix);
@@ -350,15 +310,45 @@ void Render()
 	program.SetModelMatrix(modelMatrixqq);
 	aTile.Draw(program);
 
+
+	vector<float> vertexData;
+	vector<float> texCoordData;
+	for (int y = 0; y < LEVEL_HEIGHT; y++) {
+		for (int x = 0; x < LEVEL_WIDTH; x++) {
+			if (levelData[y][x] != 0) {
+				float u = (float)(((int)levelData[y][x]) % SPRITE_COUNT_X) / (float)SPRITE_COUNT_X;
+				float v = (float)(((int)levelData[y][x]) / SPRITE_COUNT_X) / (float)SPRITE_COUNT_Y;
+				float spriteWidth = 1.0f / (float)SPRITE_COUNT_X;
+				float spriteHeight = 1.0f / (float)SPRITE_COUNT_Y;
+				vertexData.insert(vertexData.end(), {
+				TILE_SIZE * x, -TILE_SIZE * y,
+				TILE_SIZE * x, (-TILE_SIZE * y) - TILE_SIZE,
+				(TILE_SIZE * x) + TILE_SIZE, (-TILE_SIZE * y) - TILE_SIZE,
+				TILE_SIZE * x, -TILE_SIZE * y,
+				(TILE_SIZE * x) + TILE_SIZE, (-TILE_SIZE * y) - TILE_SIZE,
+				(TILE_SIZE * x) + TILE_SIZE, -TILE_SIZE * y
+					});
+				texCoordData.insert(texCoordData.end(), {
+				u, v,
+				u, v + (spriteHeight),
+				u + spriteWidth, v + (spriteHeight),
+				u, v,
+				u + spriteWidth, v + (spriteHeight),
+				u + spriteWidth, v
+					});
+			}
+		}
+	}
+
 	glm::mat4 modelMatrix4 = glm::mat4(1.0f);
 	program.SetModelMatrix(modelMatrix4);
-	glBindTexture(GL_TEXTURE_2D, spriteSheet); //I really have no idea why NONE of this works
-	glVertexAttribPointer(program.positionAttribute, 2, GL_FLOAT, false, 0, vertexDataArray);
+	glBindTexture(GL_TEXTURE_2D, spriteSheet);
+	glVertexAttribPointer(program.positionAttribute, 2, GL_FLOAT, false, 0, vertexData.data());
 	glEnableVertexAttribArray(program.positionAttribute);
-	glVertexAttribPointer(program.texCoordAttribute, 2, GL_FLOAT, false, 0, texCoordDataArray);
+	glVertexAttribPointer(program.texCoordAttribute, 2, GL_FLOAT, false, 0, texCoordData.data());
 	glEnableVertexAttribArray(program.texCoordAttribute);
 
-	glDrawArrays(GL_TRIANGLES, 0, 6);
+	glDrawArrays(GL_TRIANGLES, 0, (int)((vertexData.size()/2) * 6));
 
 	glDisableVertexAttribArray(program.texCoordAttribute);
 	glDisableVertexAttribArray(program.positionAttribute);
