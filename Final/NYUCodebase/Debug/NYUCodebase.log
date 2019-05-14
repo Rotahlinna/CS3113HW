@@ -1,0 +1,29 @@
+﻿  main.cpp
+c:\users\deman\cs3113hw\final\nyucodebase\main.cpp(169): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+c:\users\deman\cs3113hw\final\nyucodebase\main.cpp(211): warning C4244: '=': conversion from 'double' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+c:\users\deman\cs3113hw\final\nyucodebase\main.cpp(706): warning C4244: '=': conversion from 'int' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+c:\users\deman\cs3113hw\final\nyucodebase\main.cpp(707): warning C4244: '=': conversion from 'int' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+c:\users\deman\cs3113hw\final\nyucodebase\main.cpp(718): warning C4244: '=': conversion from 'double' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+c:\users\deman\cs3113hw\final\nyucodebase\main.cpp(747): warning C4305: '=': truncation from 'double' to 'T'
+          with
+          [
+              T=float
+          ]
+c:\users\deman\cs3113hw\final\nyucodebase\main.cpp(816): warning C4018: '<': signed/unsigned mismatch
+  NYUCodebase.vcxproj -> C:\Users\DeMan\CS3113HW\Final\Debug\NYUCodebase.exe

@@ -58,9 +58,6 @@ public:
 
 class Entity {
 public:
-
-	//void Update(float elapsed);
-
 	glm::vec3 position;
 	glm::vec3 velocity;
 	glm::vec3 size;
@@ -259,7 +256,7 @@ void UpdateMainMenu(float elapsed)
 
 }
 
-void UpdateGameLevel(GameState state, float elapsed)
+void UpdateGameLevel(GameState& state, float elapsed)
 {
 	for (int i = 0; i < MAX_BULLETS; i++) {
 		state.bullets[i].Update(elapsed);
@@ -443,7 +440,7 @@ void DrawText(ShaderProgram &program, int fontTexture, std::string text, float s
 		glVertexAttribPointer(program.texCoordAttribute, 2, GL_FLOAT, false, 0, texCoordData.data());
 		glEnableVertexAttribArray(program.texCoordAttribute);
 
-		glDrawArrays(GL_TRIANGLES, 0, (int)(text.size() * 6));
+		//glDrawArrays(GL_TRIANGLES, 0, (int)(text.size() * 6));
 		glDisableVertexAttribArray(program.positionAttribute);
 		glDisableVertexAttribArray(program.texCoordAttribute);
 
